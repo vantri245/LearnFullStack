@@ -23,7 +23,21 @@ class ComponentsAdd extends React.Component {
 
     submitOnClickEvent = (event) => {
         event.preventDefault()
-        alert('Job name: ' + this.state.job_name + 'Salary: ' + this.state.salary)
+        if (this.state.job_name === '' || this.state.salary === '') {
+            alert('You are not input job_name or salary')
+            return;
+        }
+        this.props.addJob(
+            {
+                id: Math.floor(Math.random() * 100),
+                job_name: this.state.job_name,
+                salary: this.state.salary
+            }
+        )
+        this.setState({
+            job_name: '',
+            salary: ''
+        })
 
     }
 
