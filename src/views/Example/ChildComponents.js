@@ -3,44 +3,59 @@ class ChildComponents extends React.Component {
     state = {
         showJob: false
     }
-    showHideOnClick = () => {
+    clickShowHideButton = () => {
         this.setState({
             showJob: !this.state.showJob
         })
     }
+    clickDeleteButton = (job_id) => {
+        this.props.deleteJob(job_id)
+    }
+
 
     render() {
         let { name, age, address, job } = this.props
         let { showJob } = this.state
+
         return (
             <>
-                <div>{name}</div>
-                <div>{age}</div>
-                <div>{address}</div>
-
+                <div>
+                    <div> Name: {name}</div>
+                    <div>Age: {age}</div>
+                    <div>Address: {address}</div>
+                </div>
                 {showJob === false ?
+
                     <div>
-                        <button onClick={() => this.showHideOnClick()}>
+                        <button onClick={() => this.clickShowHideButton()}>
                             Show
                         </button>
                     </div>
                     :
-                    <div>
-                        {
-                            job.map((item, index) => {
-                                return (
-                                    <div key={item.id}>
-                                        <div>Job: {item.job_name} - Salary: {item.salary}</div>
-                                    </div>
-                                )
-                            })
-                        }
-                        <button onClick={() => this.showHideOnClick()}>
-                            Hide
-                        </button>
-                    </div>
+                    <>
+                        <div>
+                            {
+                                job.map((item, index) => {
+                                    return (
+                                        <div key={item.id} >
+                                            <div>
+                                                Job_name: {item.job_name} - Salary: {item.salary}  <button onClick={() => this.clickDeleteButton(item.id)}> x </button>
+                                            </div>
+
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                        <div>
+                            <button onClick={() => this.clickShowHideButton()}>
+                                Hide
+                            </button>
+                        </div>
+                    </>
                 }
             </>
+
         )
     }
 }
