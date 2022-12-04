@@ -1,38 +1,51 @@
 import React from "react";
 import './ListToDo.scss';
-import AddToDo from "./AddToDo";
-import DeleteToDo from "./DeleteToDo";
 class ListToDo extends React.Component {
     state = {
         listToDo: [
-            { id: '1', action: "Do homework" },
-            { id: '2', action: "Coding" },
-            { id: '3', action: "Fixing bugs" }
+            { id: 1, action: "Do homework" },
+            { id: 2, action: "Reading Book" },
+            { id: 3, action: "Cooking" }
         ],
-        editToDo: {
+        actionInput: '',
+        editToDo: {}
+    }
 
+    inputAction = (event) => {
+        this.setState({
+            actionInput: event.target.value
+        })
+    }
+
+    clickAddBtn = () => {
+        if (this.state.actionInput === '') {
+            alert('Please input action')
+            return;
         }
-    }
-    addListToDo = (listToDo) => {
-        let currentList = [...this.state.listToDo, listToDo]
+        let todo = {
+            id: Math.floor(Math.random() * 1000),
+            action: this.state.actionInput
+        }
         this.setState({
-            listToDo: currentList
+            listToDo: [...this.state.listToDo, todo]
         })
     }
 
-    deleteListToDo = (id) => {
-        let currentList = this.state.listToDo.filter(item => item.id !== id)
+    clickDeleteBtn = (todo) => {
+        let currentArr = this.state.listToDo.filter(item => item.id !== todo.id)
         this.setState({
-            listToDo: currentList
+            listToDo: currentArr
         })
+        alert("Delete action successfully")
     }
-    clickEitButton = (editItem) => {
 
+    clickEditBtn = (todo) => {
         let { listToDo, editToDo } = this.state
-        if (this.isEmpty(editToDo) === false && editItem.id === editToDo.id) {
-            let listToDoCoppy = [...listToDo]
-            let objIndex = listToDoCoppy.findIndex((item => item.id === editItem.id))
-            listToDoCoppy[objIndex].action = editToDo.action
+        if (this.isEmpty(editToDo) === false && editToDo.id === todo.id) {
+
+            let listToDoCoppy = [...listToDo];
+            let index = listToDoCoppy.findIndex(item => item.id === todo.id)
+            listToDoCoppy[index].action = editToDo.action
             this.setState({
                 listToDo: listToDoCoppy,
                 editToDo: {}
@@ -41,7 +54,7 @@ class ListToDo extends React.Component {
         }
 
         this.setState({
-            editToDo: editItem
+            editToDo: todo
         })
     }
 
@@ -49,7 +62,7 @@ class ListToDo extends React.Component {
         return Object.keys(obj).length === 0;
     }
 
-    actinOnChange = (event) => {
+    editAction = (event) => {
         let editToDoCoppy = { ...this.state.editToDo }
         editToDoCoppy.action = event.target.value
         this.setState({
@@ -57,55 +70,49 @@ class ListToDo extends React.Component {
         })
     }
 
-
     render() {
-        let { listToDo, editToDo } = this.state
+        let { listToDo, actionInput, editToDo } = this.state
         return (
-            <>
-                <div className="list-todo-container">
-                    <AddToDo
-                        addListToDo={this.addListToDo}
-                    />
-                    <div className="list-todo-contents">
-
-                        {listToDo && listToDo.length > 0 &&
-                            listToDo.map((item, index) => {
-                                return (
-                                    <div className="list-content" key={item.id}>
-                                        <>
-                                            {this.isEmpty(editToDo) === true ?
-                                                <span>{item.action}</span>
-                                                :
-                                                <>
-                                                    {
-                                                        editToDo.id === item.id ?
-                                                            <input value={editToDo.action}
-                                                                onChange={(event) => this.actinOnChange(event)} />
-                                                            :
-                                                            <span>{item.action}</span>
-                                                    }
-                                                </>
-                                            }
-                                            <button className="btn-edit" type="button" onClick={() => this.clickEitButton(item)}>
-                                                {!this.isEmpty(editToDo) && editToDo.id === item.id ?
-                                                    'Save' : 'Edit'
-                                                }
-                                            </button>
-                                            <DeleteToDo
-                                                deleteListToDo={this.deleteListToDo}
-                                                id={item.id} />
-
-
-
-                                        </>
-                                    </div>
-                                )
-                            })
-                        }
-
-                    </div>
+            <div className="list-todo-container">
+                <div className="list-todo-add">
+                    <input type="text" value={actionInput} onChange={(event) => this.inputAction(event)} />
+                    <button type="button" onClick={() => this.clickAddBtn()}>
+                        Add
+                    </button>
                 </div>
-            </>
+                <div className="list-todo-contents">
+                    {
+                        listToDo.map((item, index) => {
+                            return (
+
+                                <div className="list-content" key={item.id}>
+                                    {this.isEmpty(editToDo) === true ?
+                                        <span>{item.action} </span>
+                                        :
+                                        <>
+                                            {editToDo.id === item.id ?
+                                                <input type="text" value={editToDo.action} onChange={(event) => this.editAction(event)} />
+                                                :
+                                                <span>{item.action} </span>
+                                            }
+                                        </>
+
+                                    }
+
+                                    <button className="btn-edit" onClick={() => this.clickEditBtn(item)}>
+                                        {this.isEmpty(editToDo) === false && editToDo.id === item.id ?
+                                            'Save' : 'Edit'
+                                        }
+                                    </button>
+                                    <button onClick={() => this.clickDeleteBtn(item)}>
+                                        Delete
+                                    </button>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+            </div>
         )
     }
 }
