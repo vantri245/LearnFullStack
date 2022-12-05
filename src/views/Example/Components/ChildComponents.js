@@ -12,7 +12,9 @@ class ChildComponents extends React.Component {
         this.props.deleteJob(job_id)
     }
 
+    clickHomeBtn = () => {
 
+    }
     render() {
         let { name, age, address, job } = this.props
         let { showJob } = this.state
@@ -30,6 +32,7 @@ class ChildComponents extends React.Component {
                         <button onClick={() => this.clickShowHideButton()}>
                             Show
                         </button>
+
                     </div>
                     :
                     <>
@@ -55,7 +58,6 @@ class ChildComponents extends React.Component {
                     </>
                 }
             </>
-
         )
     }
 }
